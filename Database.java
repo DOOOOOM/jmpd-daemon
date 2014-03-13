@@ -15,16 +15,22 @@ public class Database extends doooom.jmpd.parser{
 	
 	/*
 	* Creates Songs Database Object
+	* pre-condition: Database.json file exist
+	* post-condition: SongDatabase instance
 	*/
 	private class DatabaseSong ();
 	
 	/*
 	* Creates Artist Database Object
+	* pre-condition: Database.json file exist
+	* post-condition: ArtistDatabase instance
 	*/
 	private class DatabaseArtist ();
 	
 	/*
 	* Creates Album Database Object
+	* pre-condition: Database.json file exist
+	* post-condition: AlbumDatabase instance
 	*/
 	private class DatabaseAlbum ();
 	
