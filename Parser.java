@@ -6,15 +6,14 @@
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-/*
-* pre-condition: Database.json file must exist
-* post-condition: Database.json path is instantiated
-* Exception: IOError
-*/
+
 class public Parser{
     /*
 	* Main Constructor function handles the opening
 	* and instantiation of the json object
+	* pre-condition: Database.json file must exist
+    * post-condition: Database.json path is instantiated
+    * Exception: IOError
 	*/
 	public Parser(String DatabasedotJsonFilePath);
 	
