@@ -26,4 +26,20 @@ class public Parser{
 	* Retrieves json obj value
 	*/
 	public String getValue(String key);
+	
+	/*
+	* Read Input file
+	*/
+	public Void readFile();
+	
+	/*
+	* Insert data into database.json
+	*/
+	public Void insertEntry(JSONObject entry);
+	
+	/*
+	* Verify json format is valid before adding to 
+	* main database.json
+	*/
+	Boolean isJson(String entry);
 }
