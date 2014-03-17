@@ -81,7 +81,7 @@ public class LyricsFetcher
 	        in.close();
 		} catch (Exception e)
 		{
-			
+			e.printStackTrace();
 		}
         
         if (lyricsText.equals(null))
