@@ -9,7 +9,7 @@ public class LyricsFetcher
 	static String baseURL = "http://www.azlyrics.com/lyrics/";
 	
 	/*
-	 * The major method here in fetchLyrics. Other methods are helpers
+	 * The major method here is fetchLyrics. Other methods are helpers
 	 */
 	
 	public static String fetchLyrics(String artistName, String songName)
