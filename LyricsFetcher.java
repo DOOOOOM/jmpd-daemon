@@ -8,21 +8,30 @@ public class LyricsFetcher
 {
 	static String baseURL = "http://www.azlyrics.com/lyrics/";
 	
-	public static String constructURL(String artistName, String songName)
+	/*
+	 * The major method here in fetchLyrics. Other methods are helpers
+	 */
+	
+	public static String fetchLyrics(String artistName, String songName)
+	{
+		return fetch(artistName, songName);
+	}
+	
+	private static String constructURL(String artistName, String songName)
 	{
 		artistName = toAlphabetic(artistName);
 		songName = toAlphabetic(songName);
 		return baseURL + artistName + "/" + songName + ".html";
 	}
 	
-	public static String toAlphabetic(String str)
+	private static String toAlphabetic(String str)
 	{
 		str =  str.replaceAll("[^a-zA-Z0-9]", "");
 		//str =  str.replaceAll("[`~]", "$");
 		return str.toLowerCase();
 	}
 	
-	public static String fetch(String artistName, String songName)
+	private static String fetch(String artistName, String songName)
 	{
 		byte[] utf8Bytes = null;
 		// This array of bytes will store UTF_8 encoded values of each character, for each line
@@ -79,10 +88,5 @@ public class LyricsFetcher
         	lyricsText = "No Lyrics Found.\n"; //Default message
         
         return lyricsText;
-	}
-	
-	public static String fetchLyrics(String artistName, String songName) throws Exception
-	{
-		return fetch(artistName, songName);
 	}
 }
