@@ -67,7 +67,7 @@ public class FileSystemScanner
 		
 		for(int i = 0, j = 0; i < abstractPaths.length && j < arrayToReturn.length; j++)
 		{
-			if(abstractPaths[j].isFile())
+			if(abstractPaths[j].isFile()) //removes folders from list
 			{	
 				arrayToReturn[i] = abstractPaths[j].getPath();
 				i++;
@@ -95,19 +95,19 @@ public class FileSystemScanner
 		if(osName.equalsIgnoreCase("windows 7"))
 			musicFolderPath = windows7MusicFolderName;
 			
-		else if(osName.equalsIgnoreCase("Windows Vista")) 
+		else if(osName.equalsIgnoreCase("windows vista")) 
 			musicFolderPath = windowsVistaMusicFolderName;
 			
-		else if(osName.equalsIgnoreCase("Windows XP")) 
+		else if(osName.equalsIgnoreCase("windows xp")) 
 			musicFolderPath = windowsXPMusicFolderName;
 			
-		else if(osName.equalsIgnoreCase("Linux"))
+		else if(osName.equalsIgnoreCase("linux"))
 			musicFolderPath = linuxMusicFolderName;
 			
-		else if(osName.equalsIgnoreCase("Mac OS") || osName.equalsIgnoreCase("Mac OS X"))
+		else if(osName.equalsIgnoreCase("mac os") || osName.equalsIgnoreCase("mac os x"))
 			musicFolderPath = macMusicFolderName;
 			
-		else if(osName.equalsIgnoreCase("Solaris"))
+		else if(osName.equalsIgnoreCase("solaris"))
 			musicFolderPath = solarisMusicFolderName;	
 	
 		return musicFolderPath;
