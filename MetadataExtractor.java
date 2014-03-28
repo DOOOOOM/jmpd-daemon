@@ -3,7 +3,7 @@ import java.io.IOException;
 import com.mpatric.mp3agic.*; 
 
 /**
- * REQUIRES THE com PACKAGE IN src FOLDER
+ * REQUIRES THE com PACKAGE IN our src FOLDER (https://github.com/mpatric/mp3agic/tree/master/src/main/java)
  * 
  * This class will carry out operations to extract diverse information from
  * the ID3 tag of a specified mp3 file. It will use functionalities from
