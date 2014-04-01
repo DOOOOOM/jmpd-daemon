@@ -1,4 +1,4 @@
-package dooooom.jmpd.database;
+package dooooom.jmpd.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
