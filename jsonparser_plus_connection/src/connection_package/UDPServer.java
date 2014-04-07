@@ -10,6 +10,12 @@ import container_class_package.TestDatabase;
 public class UDPServer {
 	final static int messageLength = 1024;
 
+    public enum Command {
+        NULL, TOGGLE, PAUSE, PLAY, STOP, PREV,
+        NEXT, ADD, ADDTOPLAYLIST, REM,
+        REMPLAYLIST, DEL, ACK
+    }
+
 	public static void main(String[] args) {
 		int PORT = Configure();
 		byte[] receiveData = new byte[messageLength];
@@ -50,16 +56,40 @@ public class UDPServer {
             	_requestContainer = jsonParser.jsonParser();
             	System.out.println(_requestContainer.toString());
             	for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
-            		switch(entry.getKey()){
-            		case "playlist":
+            		switch(Command.valueOf(entry.getKey())){
+                    case TOGGLE:
+                        break;
+                    case PAUSE:
+                        break;
+                    case PLAY:
+                        break;
+                    case STOP:
+                        break;
+                    case PREV:
+                        break;
+                    case NEXT:
+                        break;
+                    case ADD:
+                        break;
+            		case ADDTOPLAYLIST:
             			List<String> result = tdb.findPlayList((String)entry.getValue());
             			//System.out.println("Server: message to be sent "+result.toString());
             			//jsonParser.sendMessage("playlist", "soul");
             			System.out.println("Server sent response");
-            			jsonParser.sendMessageWithArgList("playlist", result);
+            			jsonParser.sendMessageWithArgList(Command.ADDTOPLAYLIST, result);
             			break;
+                    case REM:
+                        break;
+                    case REMPLAYLIST:
+                        break;
+                    case DEL:
+                        break;
+                    case ACK:
+                        break;
+                    case NULL:
+                        break;
             		default:
-            			jsonParser.sendMessage("error", "unknownCommand");      			
+            			jsonParser.sendMessage(Command.ACK, "unknownCommand");
                 	
                 	}            		            		 
             	}
