@@ -1,5 +1,7 @@
 package container_class_package;
 
+import connection_package.UDPServer;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,10 +38,10 @@ public class JParser {
 		
 	}
 	
-	public void sendMessage(String cmd,String arg) throws Exception{
+	public void sendMessage(UDPServer.Command cmd,String arg) throws Exception{
 		JsonGenerator jsonGen = Json.createGenerator(outGoing);
 		jsonGen.writeStartObject()
-			.write(cmd,arg)
+			.write(cmd.toString(),arg)
 		.writeEnd();
 		jsonGen.close();
 		//convert ByteStream .. to byte array to send packet
@@ -49,10 +51,10 @@ public class JParser {
 		this.socket.send(sendPacket);
 	}
 	
-	public void sendMessageWithArgList(String cmd, List<String> result) throws Exception{
+	public void sendMessageWithArgList(UDPServer.Command cmd, List<String> result) throws Exception{
 		JsonGenerator jsonGen = Json.createGenerator(outGoing);
 		Integer count = new Integer(0);
-        JsonGenerator jarray = jsonGen.writeStartObject().writeStartArray(cmd).writeStartObject();		
+        JsonGenerator jarray = jsonGen.writeStartObject().writeStartArray(cmd.toString()).writeStartObject();
 	     for(String eachItem : result){
 	    	 count++;
 	    	 jarray.write(cmd+"_"+count.toString(),eachItem);		        	 
