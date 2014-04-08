@@ -1,6 +1,7 @@
 package connection_package;
 import java.io.*;
 
+import connection_package.UDPServer.Command;
 import container_class_package.JParser;
 import container_class_package.TestDatabase;
 
@@ -43,7 +44,7 @@ public class UDPClient {
 				
 			});
 			threadListener.start();
-			client.sendMessage("playlist", "gospel");
+			client.sendMessage(Command.ADDTOPLAYLIST, "gospel");
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -67,7 +68,7 @@ public class UDPClient {
 		}		
 	}
 	
-	public void sendMessage(String cmd,String arg) throws Exception{
+	public void sendMessage(UDPServer.Command cmd,String arg) throws Exception{
 		int port = 5005;
 		byte[] envelope;
 		ByteArrayOutputStream outGoing = new ByteArrayOutputStream();
@@ -75,7 +76,7 @@ public class UDPClient {
 		InetAddress IPAddress = InetAddress.getByName("localhost");
 		JsonGenerator jsonGen = Json.createGenerator(outGoing);
 		jsonGen.writeStartObject()
-			.write(cmd,arg)
+			.write(cmd.toString(),arg)
 		.writeEnd();
 		jsonGen.close();
 		//convert ByteStream .. to byte array to send packet
@@ -84,7 +85,7 @@ public class UDPClient {
 		clientSocket.send(sendPacket);
 	}
 		
-	public void sendMessageWithArgList(String cmd, List<String> result) throws Exception{		
+	public void sendMessageWithArgList(UDPServer.Command cmd, List<String> result) throws Exception{		
 		int port = 5005;
 		byte[] envelope;
 		int PORT = Configure();
@@ -93,7 +94,7 @@ public class UDPClient {
 		DatagramSocket socket = new DatagramSocket(5007);
 		InetAddress IPAddress = InetAddress.getByName("localhost");
 		Integer count = new Integer(0);
-        JsonGenerator jarray = jsonGen.writeStartObject().writeStartArray(cmd).writeStartObject();		
+        JsonGenerator jarray = jsonGen.writeStartObject().writeStartArray(cmd.toString()).writeStartObject();		
 	     for(String eachItem : result){
 	    	 count++;
 	    	 jarray.write(cmd+"_"+count.toString(),eachItem);		        	 
@@ -159,7 +160,7 @@ public class UDPClient {
 	
 	public void getPlaylist() throws Exception{
 		System.out.println("about to send");
-		jsonParser.sendMessage("playlist", "soul");
+		jsonParser.sendMessage(Command.ADDTOPLAYLIST, "soul");
 		if(clientSocket.isClosed()){
 			System.out.println("clientSocket is already closed at this point");
 		}
