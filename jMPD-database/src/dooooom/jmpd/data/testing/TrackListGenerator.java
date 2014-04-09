@@ -21,18 +21,27 @@ public class TrackListGenerator {
 		return s;
 	}
 	
-	public static TrackList randomTracks(int n, int artistlen) {
+	public static TrackList randomTracks(int nArtists) {
 		TrackList tracks = new TrackList();
+		
+		final int albumsPerArtist = 3;
+		final int tracksPerAlbum = 8;
 
-		for(int i = 0; i < n; i++) {
-			Track track = new Track();
+		for(int i = 0; i < nArtists; i++) {
+			String artist = getRandomString(4);
 			
-			track.put("id", Integer.toString(i));
-			track.put("artist", getRandomString(artistlen));
-			track.put("album", getRandomString(artistlen+1));
-			track.put("title", getRandomString(artistlen+4));
-			
-			tracks.add(track);
+			for (int j = 0; j < albumsPerArtist; j++) {
+				String album = getRandomString(6);
+				
+				for (int k = 0; k < tracksPerAlbum; k++) {
+					Track track = new Track();
+					track.put("id", Integer.toString(i * albumsPerArtist * tracksPerAlbum + j * tracksPerAlbum + k));
+					track.put("artist", artist);
+					track.put("album", album);
+					track.put("title", getRandomString(10));
+					tracks.add(track);
+				}
+			}
 		}
 		
 		return tracks;
