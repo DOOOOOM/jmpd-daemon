@@ -80,7 +80,8 @@ public class FileSystemScanner
 	    {
 	       if(str != null && s.length() > 0) 
 	       {
-	          list.add(str);
+	          if( (str.substring(str.length()-4,str.length()).equalsIgnoreCase(".mp3")) )
+	          	list.add(str);
 	       }
 	    }
 		
