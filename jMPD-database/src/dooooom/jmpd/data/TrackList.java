@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TrackList extends ArrayList<Track> {
-	
-	
 	public TrackList search(String key, String value) {
 		TrackList result = new TrackList();
 		
@@ -15,5 +13,12 @@ public class TrackList extends ArrayList<Track> {
 		}
 		
 		return result;
+	}
+	
+	public boolean trackIDExists(Track t) {
+		if(this.search("id", t.get("id")).size() > 0)
+			return true;
+		else
+			return false;
 	}
 }
