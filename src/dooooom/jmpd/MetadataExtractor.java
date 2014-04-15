@@ -1,3 +1,5 @@
+package dooooom.jmpd;
+
 import java.io.IOException;
 
 import com.mpatric.mp3agic.*; 

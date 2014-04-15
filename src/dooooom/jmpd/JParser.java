@@ -1,6 +1,6 @@
-package container_class_package;
+package dooooom.jmpd;
 
-import connection_package.UDPServer;
+import dooooom.jmpd.UDPServer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
