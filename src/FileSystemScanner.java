@@ -1,7 +1,7 @@
 /**
  * This class will carry out operations to help discover song
- * files in the user's music directory.
- * Besides constructors, the only method that should interface with the outside is returnPathNames
+ * files in the user's music directory, and then return a TrackList for these songs
+ * Besides constructors, the only method that should interface with the outside is returnTracks
  */
 
 import java.lang.*;
@@ -47,6 +47,27 @@ public class FileSystemScanner
 		musicFolderPath = path;
 	}
 	
+	public ArrayList<Track> returnTracks()
+	{
+		ArrayList<Track> trackList = new ArrayList<Track>();
+		int nextID = 1;
+		String[] paths = this.returnPathNames();
+		for(String path : paths)
+		{
+			Track t = new Track();
+			t.put("artist", MetadataExtractor.extractArtistFrom(path));
+			t.put("album", MetadataExtractor.extractAlbumFrom(path));
+			t.put("title", MetadataExtractor.extractTitleFrom(path));
+			t.put("id", new Integer(nextID).toString());
+			t.put("filepath", path);
+			trackList.add(t);
+			nextID++;
+		}
+		
+		TrackList tl = new TrackList(trackList);
+		
+		return tl;
+	}
 	
 	public String[] returnPathNames() 
 	/**
