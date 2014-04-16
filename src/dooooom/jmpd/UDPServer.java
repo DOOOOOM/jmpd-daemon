@@ -1,14 +1,9 @@
-package dooooom.jmpd;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import dooooom.jmpd.JParser;
-//import dooooom.jmpd.TestDatabase;
-
 public class UDPServer {
-    final static int messageLength = 1024;
+	final static int messageLength = 1024;
 
     public enum Command {
         NULL, TOGGLE, PAUSE, PLAY, STOP, PREV,
@@ -16,47 +11,55 @@ public class UDPServer {
         REMPLAYLIST, DEL, ACK
     }
 
-    public static void main(String[] args) {
-        int PORT = Configure();
-        byte[] receiveData = new byte[messageLength];
-        try {
-            UDPServer daemon = new UDPServer();
-            DatagramSocket socket = new DatagramSocket(PORT);
-            while(true){
-                //Receiving
-                DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
-                //Waits for an incoming datagram.
-                socket.receive(receivePacket);
-                //Handle connection request	& Init the thread to start processing request
-                Thread thread = new Thread(daemon.new daemonRequest(socket,receivePacket));
-                //start thread
-                thread.start();
+	public static void main(String[] args) {
+		/**
+		 * This would be the javafx main
+		 * and you kill of daemonRequest()
+		 * in a Thread. let me know if this
+		 * works.
+		 */
+		UDPServer daemon = new UDPServer();
+		Thread thread;
+		try {
+			thread = new Thread(daemon.new daemonRequest());
+			//start thread
+	        thread.start();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+	}
+	
+	private final class daemonRequest implements Runnable {
+    	public JParser jsonParser;
+    	private Map <String,Object> _requestContainer = new HashMap<String,Object>();
+    	int PORT = Configure();
+    	byte[] receiveData = new byte[messageLength];
+    	//TestDatabase tdb = new TestDatabase();
+    	DatagramSocket socket; 
+
+        public daemonRequest() throws Exception {
+        	socket = new DatagramSocket(PORT);
         }
-
-    }
-
-    private final class daemonRequest implements Runnable {
-        public JParser jsonParser;
-        private Map <String,Object> _requestContainer = new HashMap<String,Object>();
-//        TestDatabase tdb = new TestDatabase();
-        DatagramSocket socket;
-
-        public daemonRequest(DatagramSocket socket,DatagramPacket packet) throws Exception {
-            this.socket = socket;
-            jsonParser = new JParser(this.socket,packet);
-        }
-
+        
         public void run() {
-            try {
-                _requestContainer = jsonParser.jsonParser();
-                System.out.println(_requestContainer.toString());
-                for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
-                    switch(Command.valueOf(entry.getKey())){
+        	while(true){
+        		//Receiving 
+				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
+				//Waits for an incoming datagram.
+				try {
+					socket.receive(receivePacket);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        		try {
+            		jsonParser = new JParser(this.socket,receivePacket);
+                	_requestContainer = jsonParser.jsonParser();
+                	System.out.println(_requestContainer.toString());
+                	for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
+                		switch(Command.valueOf(entry.getKey())){
                         case TOGGLE:
                             break;
                         case PAUSE:
@@ -71,13 +74,8 @@ public class UDPServer {
                             break;
                         case ADD:
                             break;
-                        case ADDTOPLAYLIST:
-//                            List<String> result = tdb.findPlayList((String)entry.getValue());
-                            //System.out.println("Server: message to be sent "+result.toString());
-                            //jsonParser.sendMessage("playlist", "soul");
-                            System.out.println("Server sent response");
-//                            jsonParser.sendMessageWithArgList(Command.ADDTOPLAYLIST, result);
-                            break;
+                		case ADDTOPLAYLIST:
+                			break;
                         case REM:
                             break;
                         case REMPLAYLIST:
@@ -88,20 +86,23 @@ public class UDPServer {
                             break;
                         case NULL:
                             break;
-                        default:
-                            jsonParser.sendMessage(Command.ACK, "unknownCommand");
-
-                    }
+                		default:
+                			jsonParser.sendMessage(Command.ACK, "unknownCommand");
+                    	
+                    	}            		            		 
+                	}
+                	
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    System.out.println(e);
                 }
-
-            } catch(Exception e) {
-                e.printStackTrace();
-                System.out.println(e);
-            }
+        		
+        	}
+        	
         }
     }
-
-    private static int Configure() {
+	
+	private static int Configure() {
         int port = 5005;
         Properties props = new Properties();
         InputStream in = null;
@@ -117,7 +118,7 @@ public class UDPServer {
         } finally {
             try {
                 if(in != null)
-                    in.close();
+                   in.close();
             } catch (IOException e) {
 //                e.printStackTrace();
             }
