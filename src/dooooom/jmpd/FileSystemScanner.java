@@ -45,6 +45,11 @@ public class FileSystemScanner
 		musicFolderPath = findMusicFolder();	
 	}
 	
+	public String getFolderPath()
+	{
+		return musicFolderPath;
+	}
+	
 	
 //	public FileSystemScanner(String path)
 //	{
