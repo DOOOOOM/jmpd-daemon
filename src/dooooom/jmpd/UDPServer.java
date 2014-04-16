@@ -10,7 +10,7 @@ public class UDPServer implements Runnable{
         NEXT, ADD, ADDTOPLAYLIST, REM,
         REMPLAYLIST, DEL, ACK
     }
-    
+
 	final static int messageLength = 1024;
     public JParser jsonParser;
     private Map <String,Object> _requestContainer = new HashMap<String,Object>();
@@ -24,6 +24,8 @@ public class UDPServer implements Runnable{
     }
 
     public void run() {
+        Player controller = new Player();
+
         while(true){
             //Receiving
             DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
@@ -41,6 +43,7 @@ public class UDPServer implements Runnable{
                 for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
                     switch(Command.valueOf(entry.getKey())){
                         case TOGGLE:
+                            controller.toggle();
                             break;
                         case PAUSE:
                             break;
@@ -49,10 +52,13 @@ public class UDPServer implements Runnable{
                         case STOP:
                             break;
                         case PREV:
+                            controller.prev();
                             break;
                         case NEXT:
+                            controller.next();
                             break;
                         case ADD:
+//                            controller.add();
                             break;
                         case ADDTOPLAYLIST:
                             break;
@@ -68,10 +74,8 @@ public class UDPServer implements Runnable{
                             break;
                         default:
                             jsonParser.sendMessage(Command.ACK, "unknownCommand");
-
                     }
                 }
-
             } catch(Exception e) {
                 e.printStackTrace();
                 System.out.println(e);
