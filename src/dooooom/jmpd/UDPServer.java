@@ -1,65 +1,45 @@
+package dooooom.jmpd;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class UDPServer {
-	final static int messageLength = 1024;
-
+public class UDPServer implements Runnable{
     public enum Command {
         NULL, TOGGLE, PAUSE, PLAY, STOP, PREV,
         NEXT, ADD, ADDTOPLAYLIST, REM,
         REMPLAYLIST, DEL, ACK
     }
+    
+	final static int messageLength = 1024;
+    public JParser jsonParser;
+    private Map <String,Object> _requestContainer = new HashMap<String,Object>();
+    int PORT = Configure();
+    byte[] receiveData = new byte[messageLength];
+    //TestDatabase tdb = new TestDatabase();
+    DatagramSocket socket;
 
-	public static void main(String[] args) {
-		/**
-		 * This would be the javafx main
-		 * and you kill of daemonRequest()
-		 * in a Thread. let me know if this
-		 * works.
-		 */
-		UDPServer daemon = new UDPServer();
-		Thread thread;
-		try {
-			thread = new Thread(daemon.new daemonRequest());
-			//start thread
-	        thread.start();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    public UDPServer() throws Exception {
+        socket = new DatagramSocket(PORT);
+    }
 
-	}
-	
-	private final class daemonRequest implements Runnable {
-    	public JParser jsonParser;
-    	private Map <String,Object> _requestContainer = new HashMap<String,Object>();
-    	int PORT = Configure();
-    	byte[] receiveData = new byte[messageLength];
-    	//TestDatabase tdb = new TestDatabase();
-    	DatagramSocket socket; 
-
-        public daemonRequest() throws Exception {
-        	socket = new DatagramSocket(PORT);
-        }
-        
-        public void run() {
-        	while(true){
-        		//Receiving 
-				DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
-				//Waits for an incoming datagram.
-				try {
-					socket.receive(receivePacket);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-        		try {
-            		jsonParser = new JParser(this.socket,receivePacket);
-                	_requestContainer = jsonParser.jsonParser();
-                	System.out.println(_requestContainer.toString());
-                	for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
-                		switch(Command.valueOf(entry.getKey())){
+    public void run() {
+        while(true){
+            //Receiving
+            DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
+            //Waits for an incoming datagram.
+            try {
+                socket.receive(receivePacket);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            try {
+                jsonParser = new JParser(this.socket,receivePacket);
+                _requestContainer = jsonParser.jsonParser();
+                System.out.println(_requestContainer.toString());
+                for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
+                    switch(Command.valueOf(entry.getKey())){
                         case TOGGLE:
                             break;
                         case PAUSE:
@@ -74,8 +54,8 @@ public class UDPServer {
                             break;
                         case ADD:
                             break;
-                		case ADDTOPLAYLIST:
-                			break;
+                        case ADDTOPLAYLIST:
+                            break;
                         case REM:
                             break;
                         case REMPLAYLIST:
@@ -86,20 +66,19 @@ public class UDPServer {
                             break;
                         case NULL:
                             break;
-                		default:
-                			jsonParser.sendMessage(Command.ACK, "unknownCommand");
-                    	
-                    	}            		            		 
-                	}
-                	
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    System.out.println(e);
+                        default:
+                            jsonParser.sendMessage(Command.ACK, "unknownCommand");
+
+                    }
                 }
-        		
-        	}
-        	
+
+            } catch(Exception e) {
+                e.printStackTrace();
+                System.out.println(e);
+            }
+
         }
+
     }
 	
 	private static int Configure() {
