@@ -50,6 +50,11 @@ public class FileSystemScanner
 		return musicFolderPath;
 	}
 	
+	public String getS()
+	{
+		return s;
+	}
+	
 	
 //	public FileSystemScanner(String path)
 //	{
