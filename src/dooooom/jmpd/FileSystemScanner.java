@@ -56,32 +56,32 @@ public class FileSystemScanner
 	}
 	
 	
-//	public FileSystemScanner(String path)
-//	{
-//		musicFolderPath = path;
-//	}
-//
-//	public ArrayList<Track> returnTracks()
-//	{
-//		ArrayList<Track> trackList = new ArrayList<Track>();
-//		int nextID = 1;
-//		String[] paths = this.returnPathNames();
-//		for(String path : paths)
-//		{
-//			Track t = new Track();
-//			t.put("artist", MetadataExtractor.extractArtistFrom(path));
-//			t.put("album", MetadataExtractor.extractAlbumFrom(path));
-//			t.put("title", MetadataExtractor.extractTitleFrom(path));
-//			t.put("id", new Integer(nextID).toString());
-//			t.put("filepath", path);
-//			trackList.add(t);
-//			nextID++;
-//		}
-//
-//		TrackList tl = new TrackList(trackList);
-//
-//		return tl;
-//	}
+	public FileSystemScanner(String path)
+	{
+		musicFolderPath = path;
+	}
+
+	public ArrayList<Track> returnTracks()
+	{
+		ArrayList<Track> trackList = new ArrayList<Track>();
+		int nextID = 1;
+		String[] paths = this.returnPathNames();
+		for(String path : paths)
+		{
+			Track t = new Track();
+			t.put("artist", MetadataExtractor.extractArtistFrom(path));
+			t.put("album", MetadataExtractor.extractAlbumFrom(path));
+			t.put("title", MetadataExtractor.extractTitleFrom(path));
+			t.put("id", new Integer(nextID).toString());
+		t	.put("filepath", path);
+			trackList.add(t);
+			nextID++;
+		}
+
+		TrackList tl = new TrackList(trackList);
+
+		return tl;
+	}
 	
 	public String[] returnPathNames() 
 	/**
