@@ -1,4 +1,4 @@
-package dooooom.jmpd;
+//package dooooom.jmpd;
 
 import java.io.*;
 import java.net.*;
@@ -38,44 +38,52 @@ public class UDPServer implements Runnable{
             }
             try {
                 jsonParser = new JParser(this.socket,receivePacket);
-                _requestContainer = jsonParser.jsonParser();
-                System.out.println(_requestContainer.toString());
-                for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
-                    switch(Command.valueOf(entry.getKey())){
-                        case TOGGLE:
-                            controller.toggle();
-                            break;
-                        case PAUSE:
-                            break;
-                        case PLAY:
-                            break;
-                        case STOP:
-                            break;
-                        case PREV:
-                            controller.prev();
-                            break;
-                        case NEXT:
-                            controller.next();
-                            break;
-                        case ADD:
-//                            controller.add();
-                            break;
-                        case ADDTOPLAYLIST:
-                            break;
-                        case REM:
-                            break;
-                        case REMPLAYLIST:
-                            break;
-                        case DEL:
-                            break;
-                        case ACK:
-                            break;
-                        case NULL:
-                            break;
-                        default:
-                            jsonParser.sendMessage(Command.ACK, "unknownCommand");
-                    }
+                //_requestContainer = jsonParser.jsonParser();
+                ArrayList<Map> dataContainer = jsonParser.jsonParser();
+                for(int index = 0; index < dataContainer.size(); index++){
+                	_requestContainer = dataContainer.get(index);
+                	System.out.println(_requestContainer.toString());
+                	for(Map.Entry<String, Object> entry : _requestContainer.entrySet()){
+                        switch(Command.valueOf(entry.getKey())){
+                            case TOGGLE:
+                                controller.toggle();
+                                break;
+                            case PAUSE:
+                                break;
+                            case PLAY:
+                                break;
+                            case STOP:
+                                break;
+                            case PREV:
+                                controller.prev();
+                                break;
+                            case NEXT:
+                                controller.next();
+                                break;
+                            case ADD:
+//                                controller.add();
+                                break;
+                            case ADDTOPLAYLIST:
+                                break;
+                            case REM:
+                                break;
+                            case REMPLAYLIST:
+                                break;
+                            case DEL:
+                                break;
+                            case ACK:
+                            	TrackList tr = new TrackList();
+                            	//returns all the database to client.
+                            	sendDatabase(tr,socket,receivePacket);
+                                break;
+                            case NULL:
+                                break;
+                            default:
+                                jsonParser.sendMessage(Command.ACK, "unknownCommand");
+                        }
+                   }//end for(Map.Entry<String, Object> entry : _requestContainer.entrySet())
                 }
+                
             } catch(Exception e) {
                 e.printStackTrace();
                 System.out.println(e);
@@ -112,5 +120,38 @@ public class UDPServer implements Runnable{
         System.out.println(port);
         return port;
     }
+	
+	public void sendDatabase(TrackList dbLocation,DatagramSocket socket, DatagramPacket receivePacket){
+		ByteArrayOutputStream outGoing = new ByteArrayOutputStream();
+		InetAddress IPAddress = receivePacket.getAddress();
+		int port = receivePacket.getPort();
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(dbLocation.dbLocation);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		byte[] buf = new byte[1024];
+		try {
+			for(int readNum; (readNum = fis.read(buf)) != -1;){
+				bos.write(buf,0,readNum);
+				System.out.println("read " + readNum + " bytes,");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		byte[] envelope = bos.toByteArray();
+		DatagramPacket sendPacket = new DatagramPacket(envelope,envelope.length,IPAddress,port);
+		try {
+			socket.send(sendPacket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 }

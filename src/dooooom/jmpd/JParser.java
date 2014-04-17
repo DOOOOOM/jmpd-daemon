@@ -1,6 +1,6 @@
-package dooooom.jmpd;
+//package dooooom.jmpd;
 
-import dooooom.jmpd.UDPServer;
+//import dooooom.jmpd.UDPServer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,6 +11,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +68,11 @@ public class JParser {
 		this.socket.send(sendPacket);
 	}
 	
-	public Map <String,Object> jsonParser ()throws Exception{
+	public ArrayList<Map> jsonParser ()throws Exception{
 		String _key = null;
     	JsonParser jParser = Json.createParser(inComing);
+    	Map<String,Object> record = new HashMap<String,Object>();
+    	ArrayList<Map>dataContainer = new ArrayList<Map>();
     	try{
     		while(jParser.hasNext()){
         		JsonParser.Event event = jParser.next();
@@ -82,8 +85,8 @@ public class JParser {
         		case VALUE_STRING:
         			System.out.println(event.toString()+ " "+jParser.getString()+" ");
         			if (_key != null){
-        				//match key and value
-        				_responseContainer.put(_key, jParser.getString());
+        				record.put(_key, jParser.getString());
+        				//_responseContainer.put(_key, jParser.getString());
         				//make key null for next key/value pair
         				_key = null;
         			}
@@ -129,12 +132,20 @@ public class JParser {
         				event = jParser.next();      				
         			}
         			if(_key != null){
-        				_responseContainer.put(_key, options);
+        				record.put(_key, jParser.getString());
+        				//_responseContainer.put(_key, options);
         				_key = null;
         			}
         			break;
         		case START_OBJECT:
+        			record = new HashMap<String,Object>();
+        			break;
         		case END_OBJECT:
+        			if(record != null){
+        				dataContainer.add(record);
+        			}
+        			record = null;
+        			break;
         		case END_ARRAY:
         		case VALUE_TRUE:
         		case VALUE_FALSE:
@@ -149,7 +160,8 @@ public class JParser {
     		System.out.println(e);    		
     	}
     	
-    	return _responseContainer;        	
+    	//return _responseContainer; 
+    	return dataContainer;
     }
 
 }
