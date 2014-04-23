@@ -23,6 +23,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
@@ -33,7 +34,7 @@ import javax.json.stream.JsonParsingException;
 public class JParser_mod {
 	public static Map<String,Object> mapContainer = new HashMap<String,Object>();
 	static List<Object> stlst = new ArrayList<Object>();
-	static Map<String,Object> mapit = new HashMap<String,Object>();
+	static Map<String,Object> mapit = new HashMap<String,Object>();	
 	
 	public static void main(String[] args) {
 		//testcase one
@@ -59,31 +60,16 @@ public class JParser_mod {
 		anotherList.add(pair);
 		data2.put("ADD",anotherList);
 		System.out.println(data2.toString());
-		JsonObject d = mapToString(data2);
+		String d = mapToString(data2);
 		System.out.println(d.toString());
 		Map<String,Object> sm = new HashMap<String,Object>();
 		JParser_mod.mapContainer.clear();
-		sm = stringToMap2(d);
+		sm = stringToMap(d);
 		System.out.println(sm.toString());
 		
 	}
-
 	
-	public static JsonObject mapToJsonObject(Iterator<String> keys,JsonObjectBuilder obj,Map <String,String> data){
-		/**
-		 * Helper function used to parse json
-		 */
-		if(keys.hasNext()){
-			String k = (String)keys.next();
-			JsonObjectBuilder ob = obj.add(k,data.get(k));
-			return mapToJsonObject(keys,ob,data);
-		}else{
-			JsonObject jb = obj.build();
-			return jb;
-		}
-	}
-	
-	public static JsonObject mapToString(Map<String,Object> toSend) {
+	public static String mapToString(Map<String,Object> toSend) {
 		String key = null;
 		Object object = null;
 		JsonObjectBuilder dataContainer = Json.createObjectBuilder();
@@ -116,12 +102,14 @@ public class JParser_mod {
 			
 		}
 		
-		return dataContainer.build();
+		return dataContainer.build().toString();
 	}
 	
-	public static Map<String,Object> stringToMap2(JsonObject object){
+	public static Map<String,Object> stringToMap(String inComing){
 		JsonValue objV = null;
 		String key = null;
+		JsonReader jsonReader = Json.createReader(new StringReader(inComing));
+		JsonObject object = jsonReader.readObject();
 		Map<String,Object> mapContainer = new HashMap<String,Object>();
 		for(Map.Entry<String, JsonValue> entry: object.entrySet()){
 			key = entry.getKey();
@@ -161,5 +149,20 @@ public class JParser_mod {
 		
 		return mapContainer;
 	}
+	
+	public static JsonObject mapToJsonObject(Iterator<String> keys,JsonObjectBuilder obj,Map <String,String> data){
+		/**
+		 * Helper function used to parse json
+		 */
+		if(keys.hasNext()){
+			String k = (String)keys.next();
+			JsonObjectBuilder ob = obj.add(k,data.get(k));
+			return mapToJsonObject(keys,ob,data);
+		}else{
+			JsonObject jb = obj.build();
+			return jb;
+		}
+	}
+	
 	
 }
